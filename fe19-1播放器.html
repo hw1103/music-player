@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>播放器</title>
+    <!-- cs -->
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="fe19.css">
+</head>
+<body>
+    <div id="播放器">
+        <audio id=id-audio-player src="" controls='controls'></audio>
+        <div class='play-list-container'>
+            <img id="id-song-img"  src="1.jpg">
+            <h2 class='play-list play-color'>
+            </h2>
+            <div class='player-cotrols'>
+                <h1 id='id-song-title'></h1>
+                <div class='player-time'>
+                    <time id=id-time-current class=left>00:00</time>
+                    <div class= 'player-slider'>
+                        <input id=id-input-slider type="range"  value=0 min=0 max=100>
+                    </div>
+                    <time id=id-time-duration class=right>01:21</time>
+                </div>
+
+            </div>
+        </div>
+        <div class='play-buttons'>
+            <i id='id-song-backward'  class="fa fa-backward"></i>
+            <i id='id-song-play'class="fa fa-play"></i>
+            <!-- <i id='id-song-pause'class="fa fa-pause"></i> -->
+            <i id='id-song-forward'class="fa fa-forward"></i>
+        </div>
+    </div>
+    <!-- js -->
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+<script>
+let log = console.log.bind(console)
+let Hw = {
+    playing: false,
+    list: ['风的季节', '爱的故事', '天行九歌'],
+    now: 0,
+}
+// 生成播放列表
+let initPlayList = function() {
+    let listHtml = ''
+    for(var i = 0; i < Hw.list.length; i++) {
+        let name = Hw.list[i]
+        let html = `<li><song data-id="${i}">${name}</song></li>`
+        listHtml += html
+    }
+    // 替换 HTML 结构
+    $('.play-list').html(listHtml)
+    // $('#id-audio-player')        选择播放器 返回jQuery对象
+    // $('#id-audio-player')[0]     选择播放器 返回原生Dom对象
+    $('#id-audio-player')[0].src = Hw.list[0] + '.mp3'
+}
+// 获取播放时间
+let playerSetTime = function(value) {
+    let player = $('#id-audio-player')[0]
+    let time = player.duration * value / 100
+    player.currentTime = time
+}
+// 进度条
+let bindTimeSlider = function() {
+    let player = $('#id-audio-player')[0]
+    $('#id-input-slider').on('change', function(e) {
+        let value = e.target.value
+        playerSetTime(parseInt(value))
+    })
+
+}
+// 时间切换
+let labeFromTime = function(time) {
+    let minutes = Math.floor(time/ 60)
+    let seconds = Math.floor(time % 60)
+    let n = String(minutes)
+    let s = String(seconds)
+    if (n.length < 2) {
+        minutes  = '0' + minutes
+    } else {
+
+    }
+    if (s.length < 2) {
+        seconds = '0' + seconds
+    } else {
+
+    }
+    let t = `${minutes}:${seconds}`
+    return t
+}
+// 绑定 点击切换歌曲
+let bindSong = function() {
+    let player = $('#id-audio-player')[0]
+    $('song').on('click',function(e){
+        let self = $(e.target)
+        let song = self.text()
+        player.src = song + '.mp3'
+
+        // 解决方案2
+        Hw.now = this.dataset.id
+        // 解决方案1
+        // // 去掉 .mp3
+        // let name = song
+        // let arr = Hw.list
+        // // 查找歌曲对应下标
+        // for(let i = 0; i < arr.length; i++) {
+        //     let e = arr[i]
+        //     if (name === e) {
+        //         Hw.now = i
+        //         break
+        //     }
+        // }
+
+        // 模拟 点击事件
+        Hw.playing = false
+        $('#id-song-play').click()
+    })
+}
+// 绑定 音频 播放事件
+let bindAudioEvents = function() {
+    $('#id-audio-player').on('timeupdate', function(e) {
+        let player = e.target
+        let value = player.currentTime / player.duration
+        setSlider(value)
+        // let minutes = Math.floor(player.currentTime / 60)
+        // let seconds = Math.floor(player.currentTime % 60)
+        // let time = `${minutes}:${seconds}`
+        let time = labeFromTime(player.currentTime)
+        $('#id-time-current').text(time)
+    })
+    $('#id-audio-player').on('canplay', function(e){
+        let player = e.target
+        // let minutes = Math.floor(player.duration / 60)
+        // let seconds = Math.floor(player.duration % 60)
+        // let time = `${minutes}:${seconds}`
+        let time = labeFromTime(player.duration)
+        $('#id-input-slider').val(0)
+        $('#id-time-current').text('0:00')
+        $('#id-time-duration').text(time)
+    })
+}
+// 绑定 音频 按钮事件
+let bindPlayerButtonEvents = function() {
+    let p = $('#id-audio-player')[0]
+    let t = $('#id-song-img')
+    // 播放
+    $('#id-song-play').on('click', function() {
+        let anniu = $(this)
+        if (Hw.playing===false) {
+            p.play()
+            let n = $('song')[Hw.now]
+            $('song').removeClass('play-color')
+            $(n).addClass('play-color')
+            let song = Hw.list[Hw.now]
+            $('#id-song-title').text(song)
+            Hw.playing = true
+            anniu.removeClass('fa-play')
+            anniu.addClass('fa-pause')
+            t.addClass('zhuan')
+        }else {
+            p.pause()
+            Hw.playing = false
+            anniu.removeClass('fa-pause')
+            anniu.addClass('fa-play')
+            t.removeClass('zhuan')
+        }
+    })
+
+    // 暂停
+    $('#id-song-pause').on('click', function() {
+        p.pause()
+    })
+    // 下一曲
+    $('#id-song-forward').on('click', function() {
+        let length = Hw.list.length
+        Hw.now = (Hw.now + 1) % length
+        let song = Hw.list[Hw.now]
+        p.src = song + '.mp3'
+        $('#id-song-title').text(song)
+        p.play()
+        let n = $('song')[Hw.now]
+        $('song').removeClass('play-color')
+        $(n).addClass('play-color')
+    })
+    // 上一曲
+    $('#id-song-backward').on('click', function(){
+        let length = Hw.list.length
+        if (Hw.now === 0) {
+            Hw.now = length - 1
+        }else {
+            Hw.now = (Hw.now - 1) % length
+        }
+        let song = Hw.list[Hw.now]
+        p.src = song + '.mp3'
+        $('#id-song-title').text(song)
+        p.play()
+        let n = $('song')[Hw.now]
+        $('song').removeClass('play-color')
+        $(n).addClass('play-color')
+    })
+}
+// 设置进度条
+let setSlider = function(value) {
+    let v = value * 100
+    $('#id-input-slider').val(v)
+
+}
+
+// 初始化结构
+let initHtml = function() {
+    initPlayList()
+}
+// 绑定事件
+let bindEvents = function() {
+    bindSong()
+    bindTimeSlider()
+    bindAudioEvents()
+    bindPlayerButtonEvents()
+}
+let main = function() {
+    initHtml()
+    bindEvents()
+}
+$(document).ready(function() {
+    main()
+})
+</script>
+</body>
+</html>

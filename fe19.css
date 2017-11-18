@@ -1,0 +1,114 @@
+.zhuan {
+    animation: fa-spin 5s infinite linear;
+}
+.play-color{
+    color: #d038e1;
+}
+
+#播放器{
+    background-image: url(2.jpg);
+    background-size: 100% 100%;
+    background-origin: content-box;
+    background-repeat: no-repeat;
+    width: 500px;
+    border-radius: 12px;
+}
+.player-time{
+    text-align: center;
+    display: flex;
+    width: 40px;
+    color:  #d9daf3;
+    font-size: 0.5em;
+}
+.right{
+    text-align: center;
+    width: 40px;
+    float: right;
+    display: inline-block;
+}
+#id-audio-player{
+    display: none;
+}
+
+/*进度条*/
+#id-input-slider{
+    text-align: center;
+    width: 467px;
+    margin: 0;
+}
+
+/*歌曲*/
+song{
+ text-shadow: 5px 5px 5px #4783f5;
+ font-size: 0.3em;
+ cursor: pointer;
+}
+.play-list li{
+    color: #a0ecf9;
+    list-style: none;
+    margin-left: 15px;
+}
+.play-list li:hover{
+    color:#f2a1f7;
+}
+#id-song-title{
+    height: 15px;
+    margin: 5px 0px;
+    text-align: center;
+    text-shadow: 5px 5px 5px black;
+    color:  #98a5ec;
+    font-size: 0.8em;
+}
+
+/*按钮*/
+.play-buttons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #2ea5da;
+    height: 20px;
+}
+.play-buttons i {
+    margin-left: 50px;
+    font-size: 12px;
+
+}
+.play-buttons i:hover {
+    color:#c589e8;
+}
+
+/*滑条*/
+#id-input-slider {
+    -webkit-appearance: button;
+    width: auto;
+    background: transparent;
+    border-radius: 10px;
+    width: 454px;
+}
+#id-input-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+}
+#id-input-slider::-webkit-slider-runnable-track {
+    height: 5px;
+    border-radius: 10px; /*将轨道设为圆角的*/
+    box-shadow: 0 1px 1px #def3f8, inset 0 .125em .125em #0d1112; /*轨道内置阴影效果*/
+}
+#id-input-slider:focus {
+    outline: none;
+}
+#id-input-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 10px;
+    width: 10px;
+    margin-top: -3px; /*使滑块超出轨道部分的偏移量相等*/
+    background: black;
+    border-radius: 50%; /*外观设置为圆形*/
+    border: solid 0.125em #88ecec; /*设置边框*/
+    box-shadow: 0 .125em .125em #3b4547; /*添加底部阴影*/
+}
+#id-song-img{
+    height: 120px;
+    width: 120px;
+    border-radius: 60%;
+    opacity: 0.45;
+}
